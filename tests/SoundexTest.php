@@ -7,6 +7,12 @@ include 'includes/class.Soundex.php';
 
 class SoundexTest extends PHPUnit_Framework_TestCase
 {
+    
+    public $s_german_street = 'Konrad Adenauer Allee';
+    
+    public $s_english_street = 'Warvock Avenue';
+
+
     public function testWrongLanguageCode() {
         try {
             $o_soundex = new Soundex( 'xx', '' );
@@ -51,11 +57,11 @@ class SoundexTest extends PHPUnit_Framework_TestCase
         
         $o_soundex = new Soundex( 'de', $o_db );
         
-        $a_suggestions = $o_soundex->fetchSuggestions( 'Konrad Adenauer Allee', 'street', 'de_streets', 'array' );
+        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'street', 'de_streets', 'array' );
         
         $this->assertEquals( true, is_array($a_suggestions) );
         
-        $s_suggestions = $o_soundex->fetchSuggestions( 'Konrad Adenauer Allee', 'street', 'de_streets', 'json' );
+        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'street', 'de_streets', 'json' );
         
         $this->assertEquals( true, is_array( json_decode($s_suggestions, true) ) );
         
@@ -66,11 +72,11 @@ class SoundexTest extends PHPUnit_Framework_TestCase
         
         $o_soundex = new Soundex( 'de', 'localhost', 'root', 'root', 'soundex' );
         
-        $a_suggestions = $o_soundex->fetchSuggestions( 'Konrad Adenauer Allee', 'street', 'de_streets', 'array' );
+        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'street', 'de_streets', 'array' );
         
         $this->assertEquals( true, is_array($a_suggestions) );
         
-        $s_suggestions = $o_soundex->fetchSuggestions( 'Konrad Adenauer Allee', 'street', 'de_streets', 'json' );
+        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'street', 'de_streets', 'json' );
         
         $this->assertEquals( true, is_array( json_decode($s_suggestions, true) ) );
         
@@ -97,7 +103,7 @@ class SoundexTest extends PHPUnit_Framework_TestCase
         
         try {
             
-            $a_suggestions = $o_soundex->fetchSuggestions( 'Konrad Adenauer Allee', $s_field, 'de_streets', 'array' );
+            $a_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, $s_field, 'de_streets', 'array' );
             
         } catch (Exception $e) {
             if ('Exception' === get_class($e)) {
@@ -107,7 +113,7 @@ class SoundexTest extends PHPUnit_Framework_TestCase
         
         try {
             
-            $a_suggestions = $o_soundex->fetchSuggestions( 'Konrad Adenauer Allee', 'street', $s_table, 'array' );
+            $a_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'street', $s_table, 'array' );
             
         } catch (Exception $e) {
             if ('Exception' === get_class($e)) {
@@ -123,11 +129,11 @@ class SoundexTest extends PHPUnit_Framework_TestCase
         
         $o_soundex = new Soundex( 'en', $o_db );
         
-        $a_suggestions = $o_soundex->fetchSuggestions( 'Warvock Avenue', 'street', 'en_streets', 'array' );
+        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'street', 'en_streets', 'array' );
         
         $this->assertEquals( true, is_array($a_suggestions) );
         
-        $s_suggestions = $o_soundex->fetchSuggestions( 'Warvock Avenue', 'street', 'en_streets', 'json' );
+        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'street', 'en_streets', 'json' );
         
         $this->assertEquals( true, is_array( json_decode($s_suggestions, true) ) );
         
@@ -138,11 +144,11 @@ class SoundexTest extends PHPUnit_Framework_TestCase
         
         $o_soundex = new Soundex( 'en', 'localhost', 'root', 'root', 'soundex' );
         
-        $a_suggestions = $o_soundex->fetchSuggestions( 'Warvock Avenue', 'street', 'en_streets', 'array' );
+        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'street', 'en_streets', 'array' );
         
         $this->assertEquals( true, is_array($a_suggestions) );
         
-        $s_suggestions = $o_soundex->fetchSuggestions( 'Warvock Avenue', 'street', 'en_streets', 'json' );
+        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'street', 'en_streets', 'json' );
         
         $this->assertEquals( true, is_array( json_decode($s_suggestions, true) ) );
         
@@ -169,7 +175,7 @@ class SoundexTest extends PHPUnit_Framework_TestCase
         
         try {
             
-            $a_suggestions = $o_soundex->fetchSuggestions( 'Warvock Avenue', $s_field, 'en_streets', 'array' );
+            $a_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, $s_field, 'en_streets', 'array' );
             
         } catch (Exception $e) {
             if ('Exception' === get_class($e)) {
@@ -179,7 +185,7 @@ class SoundexTest extends PHPUnit_Framework_TestCase
         
         try {
             
-            $a_suggestions = $o_soundex->fetchSuggestions( 'Konrad Adenauer Allee', 'street', $s_table, 'array' );
+            $a_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'street', $s_table, 'array' );
             
         } catch (Exception $e) {
             if ('Exception' === get_class($e)) {

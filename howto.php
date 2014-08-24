@@ -6,9 +6,12 @@
 
 <html>
     <head>
-
+        <title>Soundex Class HowTo</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="css/style.css"></style>
     </head>
     <body>
+        <h1>Soundex Class HowTo</h1>
         <article>
             <p>
                 Imagine you have a database called "soundex" and there is a table
@@ -39,9 +42,8 @@
                 'de' as the first argument. Otherwise, if the words you want to
                 have suggested are in English, please use 'en'.
             </p>
-            <code>
                 <?php
-                echo highlight_string('
+                highlight_string('
             <?php
 
                 include(\'includes/class.Soundex.php\');
@@ -65,8 +67,6 @@
                 
                   
                 ?>
-            </code>
-
             <p>
                 After the object (in our example, $o_soundex) is created,
                 let us imagine following situation: Website visitor types
@@ -78,9 +78,8 @@
 
             <p>So we use following example code:</p>
 
-            <code>
                 <?php
-                echo highlight_string('
+                highlight_string('
                 <?php
                     /**
                     * Let us imagine $_POST["streetname"] contains
@@ -93,7 +92,6 @@
                             \'array\' ); // Use "array" or "json" here
                 ?>');
                 ?>
-            </code>
 
             <p>Once the function is done, it will either return an array or
                 a json string, depending on what you have chose as the last
@@ -111,8 +109,8 @@
             </p>
 
             <p>
-                Of course this class is experimental. I can't give a
-                100% guarantee if everything works as expected.
+                Of course this class is experimental. It is distributed in
+                the hope that it will be useful, but without any warranty.
             </p>
 
         </article>
