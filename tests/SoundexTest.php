@@ -27,41 +27,21 @@ class SoundexTest extends PHPUnit_Framework_TestCase
             $o_soundex = new Soundex( 'de', '' );
         } catch (Exception $e) {
             if ('Exception' === get_class($e)) {
-                $this->assertEquals( 'Missing parameter for mysqli object. You can also use the database server name instead.', $e->getMessage() );
+                $this->assertEquals( 'Missing/wrong parameter for mysqli object.', $e->getMessage() );
             }
         }
         
     }
-    
-    public function testParameters() {
-        try {
-            $o_soundex = new Soundex( 'de', 'localhost' );
-        } catch (Exception $e) {
-            if ('Exception' === get_class($e)) {
-                $this->assertEquals( 'Missing/wrong database login information.', $e->getMessage() );
-            }
-        }
-        
-        try {
-            $o_soundex = new Soundex( 'de', 'localhost', 'a', 'b', 'c' );
-        } catch (Exception $e) {
-            if ('Exception' === get_class($e)) {
-                $this->assertEquals( 'Missing/wrong database login information.', $e->getMessage() );
-            }
-        }
-    }
-    
+
     public function testGermanWordsearchMysqli() {
+
+        $o_soundex = new Soundex( 'de', new mysqli( 'localhost', 'root', 'root', 'soundex' ) );
         
-        $o_db = new mysqli( 'localhost', 'root', 'root', 'soundex' );
-        
-        $o_soundex = new Soundex( 'de', $o_db );
-        
-        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'street', 'de_streets', 'array' );
+        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'name', 'streets', 'array' );
         
         $this->assertEquals( true, is_array($a_suggestions) );
         
-        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'street', 'de_streets', 'json' );
+        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'name', 'streets', 'json' );
         
         $this->assertEquals( true, is_array( json_decode($s_suggestions, true) ) );
         
@@ -69,41 +49,41 @@ class SoundexTest extends PHPUnit_Framework_TestCase
     
     
     public function testGermanWordsearchParams() {
+
+        $o_soundex = new Soundex( 'de', new mysqli( 'localhost', 'root', 'root', 'soundex' ) );
         
-        $o_soundex = new Soundex( 'de', 'localhost', 'root', 'root', 'soundex' );
-        
-        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'street', 'de_streets', 'array' );
+        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'name', 'streets', 'array' );
         
         $this->assertEquals( true, is_array($a_suggestions) );
         
-        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'street', 'de_streets', 'json' );
+        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, 'name', 'streets', 'json' );
         
         $this->assertEquals( true, is_array( json_decode($s_suggestions, true) ) );
         
     }
     
     public function testGermanWordsearchFindNothing() {
+
+        $o_db = new mysqli( 'localhost', 'root', 'root', 'soundex' );
+
+        $o_soundex = new Soundex( 'de', new mysqli( 'localhost', 'root', 'root', 'soundex' ) );
         
-        $o_soundex = new Soundex( 'de', 'localhost', 'root', 'root', 'soundex' );
-        
-        $a_suggestions = $o_soundex->fetchSuggestions( 'asdfasdf', 'street', 'de_streets', 'array' );
+        $a_suggestions = $o_soundex->fetchSuggestions( 'asdfasdf', 'name', 'streets', 'array' );
         
         $this->assertEquals( 0, sizeof($a_suggestions) );
         
     }
     
     public function testGermanWordsearchWrongSuggestionsParams() {
-        
-        $o_db = new mysqli( 'localhost', 'root', 'root', 'soundex' );
-        
-        $o_soundex = new Soundex( 'de', $o_db );
+
+        $o_soundex = new Soundex( 'de', new mysqli( 'localhost', 'root', 'root', 'soundex' ) );
             
         $s_field = 'notexistingtablefield';
         $s_table = 'notexistingtable';
         
         try {
             
-            $a_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, $s_field, 'de_streets', 'array' );
+            $a_suggestions = $o_soundex->fetchSuggestions( $this->s_german_street, $s_field, 'streets', 'array' );
             
         } catch (Exception $e) {
             if ('Exception' === get_class($e)) {
@@ -124,16 +104,14 @@ class SoundexTest extends PHPUnit_Framework_TestCase
     }
         
     public function testEnglishWordsearchMysqli() {
+
+        $o_soundex = new Soundex( 'en', new mysqli( 'localhost', 'root', 'root', 'soundex' ) );
         
-        $o_db = new mysqli( 'localhost', 'root', 'root', 'soundex' );
-        
-        $o_soundex = new Soundex( 'en', $o_db );
-        
-        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'street', 'en_streets', 'array' );
+        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'name', 'streets', 'array' );
         
         $this->assertEquals( true, is_array($a_suggestions) );
         
-        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'street', 'en_streets', 'json' );
+        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'name', 'streets', 'json' );
         
         $this->assertEquals( true, is_array( json_decode($s_suggestions, true) ) );
         
@@ -142,13 +120,13 @@ class SoundexTest extends PHPUnit_Framework_TestCase
     
     public function testEnglishWordsearchParams() {
         
-        $o_soundex = new Soundex( 'en', 'localhost', 'root', 'root', 'soundex' );
+        $o_soundex = new Soundex( 'en', new mysqli( 'localhost', 'root', 'root', 'soundex' ) );
         
-        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'street', 'en_streets', 'array' );
+        $a_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'name', 'streets', 'array' );
         
         $this->assertEquals( true, is_array($a_suggestions) );
         
-        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'street', 'en_streets', 'json' );
+        $s_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, 'name', 'streets', 'json' );
         
         $this->assertEquals( true, is_array( json_decode($s_suggestions, true) ) );
         
@@ -156,26 +134,24 @@ class SoundexTest extends PHPUnit_Framework_TestCase
     
     public function testEnglishWordsearchFindNothing() {
         
-        $o_soundex = new Soundex( 'en', 'localhost', 'root', 'root', 'soundex' );
+        $o_soundex = new Soundex( 'en', new mysqli( 'localhost', 'root', 'root', 'soundex' ) );
         
-        $a_suggestions = $o_soundex->fetchSuggestions( 'asdfasdf', 'street', 'en_streets', 'array' );
+        $a_suggestions = $o_soundex->fetchSuggestions( 'asdfasdf', 'name', 'streets', 'array' );
         
         $this->assertEquals( 0, sizeof($a_suggestions) );
         
     }
     
     public function testEnglishWordsearchWrongSuggestionsParams() {
-        
-        $o_db = new mysqli( 'localhost', 'root', 'root', 'soundex' );
-        
-        $o_soundex = new Soundex( 'en', $o_db );
+
+        $o_soundex = new Soundex( 'en', new mysqli( 'localhost', 'root', 'root', 'soundex' ) );
             
         $s_field = 'notexistingtablefield';
         $s_table = 'notexistingtable';
         
         try {
             
-            $a_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, $s_field, 'en_streets', 'array' );
+            $a_suggestions = $o_soundex->fetchSuggestions( $this->s_english_street, $s_field, 'streets', 'array' );
             
         } catch (Exception $e) {
             if ('Exception' === get_class($e)) {
