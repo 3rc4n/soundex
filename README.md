@@ -23,6 +23,8 @@ for the suggestions.
 Of course it is experimental, so I do not give any warranties.
 
 ###How to use it
+
+
 First, you will have to include the class file. Then you
 can either create a Mysqli-object and use it as the 2nd argument
 when you create the object, or you can add 4 Parameters instead containing

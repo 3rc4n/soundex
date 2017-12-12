@@ -7,40 +7,40 @@ include 'includes/function.colgone_phon.php';
 
 class Soundex {
 
-    private $o_mysqli;
-    private $s_language;
+    private $mysqli;
+    private $language;
 
     /**
      * 
-     * @param string $s_language Language code, either "de" or "en"
-     * @param mixed $o_mysqli The mysqli-object
+     * @param string $language Language code, either "de" or "en"
+     * @param mixed $mysqli The mysqli-object
      * @throws Exception
      */
-    public function __construct($s_language, $o_mysqli) {
+    public function __construct($language, $mysqli) {
 
-        if ($this->checkLanguage($s_language)) {
-            $this->s_language = $s_language;
+        if ($this->checkLanguage($language)) {
+            $this->language = $language;
         } else {
             throw new Exception('Missing/wrong language code. Try "de" for German or "en" for English.');
         }
 
         // Is it really an object of mysqli?
-        if (is_object($o_mysqli) && $o_mysqli instanceof mysqli) {
-            $this->o_mysqli = $o_mysqli;
+        if (iobject($mysqli) && $mysqli instanceof mysqli) {
+            $this->mysqli = $mysqli;
         } else {
             throw new Exception('Missing/wrong parameter for mysqli object.');
         }
-
+        
     }
     
     /**
      * 
-     * @param string $s_language Language code to check
+     * @param string $language Language code to check
      * @return boolean True if the language code is supported
      */
-    private function checkLanguage($s_language) {
+    private function checkLanguage($language) {
 
-        if ('de' === $s_language || 'en' === $s_language) {
+        if ('de' === $language || 'en' === $language) {
 
             return true;
         }
@@ -50,36 +50,36 @@ class Soundex {
 
     /**
      * 
-     * @param string $s_word The sound alike word to search for
-     * @param string $s_field Name of the table field
-     * @param string $s_table Name of the table itself
-     * @param string $s_return_type Either "array" or "json" as the return type
+     * @param string $word The sound alike word to search for
+     * @param string $field Name of the table field
+     * @param string $table Name of the table itself
+     * @param string $return_type Either "array" or "json" as the return type
      * @return mixed Either an array or a json string
      * @throws Exception
      */
-    public function fetchSuggestions($s_word, $s_field, $s_table, $s_return_type = 'array') {
+    public function fetchSuggestions($word, $field, $table, $return_type = 'array') {
 
         $a_results = array();
 
-        $s_sql = 'SELECT ' . $this->o_mysqli->escape_string($s_field) .
-                ' FROM ' . $this->o_mysqli->escape_string($s_table);
+        $sql = 'SELECT ' . $this->mysqli->escape_string($field) .
+                ' FROM ' . $this->mysqli->escape_string($table);
 
-        $query = $this->o_mysqli->query($s_sql);
+        $query = $this->mysqli->query($sql);
 
-        if (!$query = $this->o_mysqli->query($s_sql)) {
-            throw new Exception('SQL statement could not be executed. ' . $this->o_mysqli->error);
+        if (!$query = $this->mysqli->query($sql)) {
+            throw new Exception('SQL statement could not be executed. ' . $this->mysqli->error);
         }
 
         // todo: Should fetch the results into an array so the $query can be closed before a while-loop can check its contents
         while ($row = $query->fetch_row()) {
-            if ('de' === $this->s_language) {
+            if ('de' === $this->language) {
                 // German
-                if (@cologne_phon($row[0]) === @cologne_phon($this->o_mysqli->escape_string($s_word))) {
+                if (@cologne_phon($row[0]) === @cologne_phon($this->mysqli->escape_string($word))) {
                     array_push($a_results, $row[0]);
                 }
             } else {
                 // English
-                if (soundex($row[0]) === soundex($this->o_mysqli->escape_string($s_word))) {
+                if (soundex($row[0]) === soundex($this->mysqli->escape_string($word))) {
                     array_push($a_results, $row[0]);
                 }
             }
@@ -87,9 +87,9 @@ class Soundex {
 
         $query->close();
 
-        if ('array' === $s_return_type) {
+        if ('array' === $return_type) {
             return $a_results;
-        } elseif ('json' === $s_return_type) {
+        } elseif ('json' === $return_type) {
             return json_encode($a_results);
         }
     }
